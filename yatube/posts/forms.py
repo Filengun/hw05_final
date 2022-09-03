@@ -10,6 +10,7 @@ class PostForm(ModelForm):
         labels = {'text': 'Введите текст', 'group': 'Выберите группу'}
         help_texts = {'text': 'Оставь любую надпись', 'group': 'существующие'}
 
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment

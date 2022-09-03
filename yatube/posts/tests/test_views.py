@@ -51,7 +51,6 @@ class PostsPages(TestCase):
         cls.authorized_client = Client()
         cls.authorized_client.force_login(cls.user)
 
-
     def test_template_auth(self):
         """URL используют соответствующие шаблоны для авторзиванного."""
         templates_pages_names = {
@@ -266,7 +265,8 @@ class FollowTest(TestCase):
     def test_auth_follow_another_users(self):
         """проверка подписки."""
         resp_fol = self.authorized_client.get(
-            reverse('posts:profile_follow',
+            reverse(
+                'posts:profile_follow',
                 kwargs={'username': 'author'}))
         expected = Follow.objects.filter(
             user=FollowTest.follower).exists()
