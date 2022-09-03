@@ -1,10 +1,9 @@
-from email.mime import image
 from xml.etree.ElementTree import Comment
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from posts.forms import PostForm
-from posts.models import Post,  Comment
+from posts.models import Post, Comment
 import shutil
 import tempfile
 from django.conf import settings
@@ -12,6 +11,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
+
 
 @override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
 class TestCreateForm(TestCase):
@@ -25,7 +25,6 @@ class TestCreateForm(TestCase):
         super().setUpClass()
         cls.user = User.objects.create_user(username='auth')
         cls.form = PostForm()
-
 
     def setUp(self):
         self.guest_client = Client()

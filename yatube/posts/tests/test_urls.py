@@ -29,7 +29,8 @@ class StaticURLTests(TestCase):
             reverse('posts:second', kwargs={'slug': 'test-slug'}):
                 'posts/group_list.html',
             reverse(
-                'posts:post_detail', kwargs={'post_id': StaticURLTests.post.id}):
+                'posts:post_detail',
+                kwargs={'post_id': StaticURLTests.post.id}):
                 'posts/post_detail.html',
         }
 
@@ -40,7 +41,7 @@ class StaticURLTests(TestCase):
                 response = self.guest_client.get(i)
                 self.assertEqual(
                     response.status_code,
-                    HTTPStatus.OK, 
+                    HTTPStatus.OK,
                     f"Не ок со статусом у гостя {i}"
                 )
 

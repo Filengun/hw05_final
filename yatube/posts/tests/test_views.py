@@ -11,6 +11,7 @@ from django.conf import settings
 User = get_user_model()
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
+
 @override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
 class PostsPages(TestCase):
     @classmethod
@@ -49,7 +50,6 @@ class PostsPages(TestCase):
         cls.guest_client = Client()
         cls.authorized_client = Client()
         cls.authorized_client.force_login(cls.user)
-
 
 
     def test_template_auth(self):
@@ -267,7 +267,7 @@ class FollowTest(TestCase):
         """проверка подписки."""
         resp_fol = self.authorized_client.get(
             reverse('posts:profile_follow',
-            kwargs={'username':'author'}))
+                kwargs={'username': 'author'}))
         expected = Follow.objects.filter(
             user=FollowTest.follower).exists()
         self.assertTrue(expected)
@@ -286,7 +286,7 @@ class FollowTest(TestCase):
         )
         self.authorized_client.get(
             reverse(
-                'posts:profile_unfollow', kwargs={'username':'author'}
+                'posts:profile_unfollow', kwargs={'username': 'author'}
             )
         )
         expected = Follow.objects.filter(

@@ -1,4 +1,3 @@
-from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth import get_user_model
 from core.models import CreatedModel
@@ -35,7 +34,7 @@ class Post(CreatedModel):
         'Картинка',
         upload_to='posts/',
         blank=True
-    )  
+    )
 
     class Meta:
         ordering = ['-created']
@@ -44,6 +43,7 @@ class Post(CreatedModel):
 
     def __str__(self):
         return self.text[:15]
+
 
 class Comment(CreatedModel):
     post = models.ForeignKey(
@@ -61,6 +61,7 @@ class Comment(CreatedModel):
 
     def __str__(self):
         return self.text
+
 
 class Follow(models.Model):
     user = models.ForeignKey(
