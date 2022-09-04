@@ -171,5 +171,5 @@ class TestCreateForm(TestCase):
         )
         self.assertRedirects(
             response,
-            f'/auth/login/?next=/posts/1/comment/'
+            '/auth/login/?next=/posts/1/comment/'
         )

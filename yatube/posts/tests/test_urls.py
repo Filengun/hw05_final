@@ -31,7 +31,7 @@ class StaticURLTests(TestCase):
                 kwargs={'post_id': StaticURLTests.post.id}):
                 'posts/post_detail.html',
         }
-    
+
     def setUp(self):
         self.guest_client = Client()
         self.authorized_client = Client()
@@ -78,33 +78,33 @@ class StaticURLTests(TestCase):
     def test_follow_auth(self):
         """Страница follow доступна авторизованному пользователю."""
         response = self.authorized_client.get('/follow/')
-        self.assertEqual(response.status_code, HTTPStatus.OK,'пять')
+        self.assertEqual(response.status_code, HTTPStatus.OK, 'пять')
 
     def test_follow_guest(self):
         """Страница follow доступна гостю."""
         response = self.guest_client.get('/follow/')
-        self.assertEqual(response.status_code, HTTPStatus.FOUND,'шесть')
+        self.assertEqual(response.status_code, HTTPStatus.FOUND, 'шесть')
 
     def test_profile_follow_auth(self):
         response = self.authorized_client1.get('/profile/auth/follow/')
-        self.assertEqual(response.status_code, HTTPStatus.FOUND,'семь')
+        self.assertEqual(response.status_code, HTTPStatus.FOUND, 'семь')
 
     def test_profile_follow_guest(self):
         response = self.guest_client.get('/profile/authh/follow/')
-        self.assertEqual(response.status_code, HTTPStatus.FOUND,'восемь')
+        self.assertEqual(response.status_code, HTTPStatus.FOUND, 'восемь')
         
     def test_comment_auth(self):
         response = self.authorized_client.get('/posts/1/comment/')
-        self.assertEqual(response.status_code, HTTPStatus.FOUND,'девять')
+        self.assertEqual(response.status_code, HTTPStatus.FOUND, 'девять')
 
     def test_comment_guest(self):
         response = self.guest_client.get('/posts/1/comment/')
-        self.assertEqual(response.status_code, HTTPStatus.FOUND,'десять')
+        self.assertEqual(response.status_code, HTTPStatus.FOUND, 'десять')
 
     def test_unfollow_auth(self):
         response = self.authorized_client.get('/profile/auth/unfollow/')
-        self.assertEqual(response.status_code, HTTPStatus.FOUND,'одиннадцать')
+        self.assertEqual(response.status_code, HTTPStatus.FOUND, 'одиннадцать')
     
     def test_unfollow_guest(self):
         response = self.guest_client.get('/profile/auth/unfollow/')
-        self.assertEqual(response.status_code, HTTPStatus.FOUND,'двенадцать')
+        self.assertEqual(response.status_code, HTTPStatus.FOUND, 'двенадцать')

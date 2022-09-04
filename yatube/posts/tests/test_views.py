@@ -251,7 +251,7 @@ class CommentsTest(TestCase):
         author = com.author
         self.assertEqual(str(text), 'текст коммента')
         self.assertEqual(author, CommentsTest.user)
-    
+
     def test_comment_guest(self):
         """Тоже самое только для гостя."""
         self.guest.get(reverse(
@@ -332,7 +332,7 @@ class FollowTest(TestCase):
         self.assertFalse(expected)
         self.assertRedirects(
             resp_fol, '/auth/login/?next=/profile/author/follow/'
-            )
+        )
 
     def test_unfollowng(self):
         """Проверка отписки для неавторизованного."""
@@ -343,8 +343,8 @@ class FollowTest(TestCase):
         )
         self.assertRedirects(
             resp_fol, '/auth/login/?next=/profile/author/unfollow/'
-            )
-    
+        )
+
     def test_cannot_subscribe_to_himself(self):
         """Автор не может подписаться сам на себя."""
         self.authorized_client.get(
