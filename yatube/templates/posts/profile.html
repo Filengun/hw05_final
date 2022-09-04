@@ -6,59 +6,59 @@
     <div class="container py-5">
       <div class="mb-5"> 
         <h1>Все посты пользователя 
-        {% if author.get_full_name %}
-          {{ author.get_full_name }}
-        {% else %}
-          {{ author }}
-        {% endif %}</h1>
+          {% if author.get_full_name %}
+            {{ author.get_full_name }}
+          {% else %}
+            {{ author }}
+          {% endif %}
+        </h1>
         <h3>Всего постов: {{ count }} </h3>
         {% if user.is_authenticated and user != author %}
-        {% if following %}
-          <a
-            class="btn btn-lg btn-light"
-            href="{% url 'posts:profile_unfollow' author.username %}" role="button"
-          >
-            Отписаться
-          </a>
-        {% else %}
-          <a
-            class="btn btn-lg btn-primary"
-            href="{% url 'posts:profile_follow' author.username %}" role="button"
-          >
-            Подписаться
-          </a>
-        </div>
-        {% endif %}
+          {% if following %}
+            <a
+              class="btn btn-lg btn-light"
+              href="{% url 'posts:profile_unfollow' author.username %}" role="button"
+            >
+              Отписаться
+            </a>
+          {% else %}
+            <a
+              class="btn btn-lg btn-primary"
+              href="{% url 'posts:profile_follow' author.username %}" role="button"
+            >
+              Подписаться
+            </a>
+          {% endif %}
         {% endif %}
         <article>
           {% for post in page_obj %}
-          <ul>
-            <li>
-            Автор: {{ post.author.get_full_name }}
-            </li>
-            <li>
-              Дата публикации: {{ post.created|date:"d E Y" }}
-            </li>
-          </ul>
-          <p>
-            {{ post.text }}
-          </p>
-          {% thumbnail post.image "300" crop="center" upscale=True as im %}
-            <img  class="cared-img my-2"  src="{{ im.url }}" >
-          {% endthumbnail %}
-          <br>
-          <a href="{% url 'posts:post_detail' post.pk %}">подробная информация </a>
+            <ul>
+              <li>
+                Автор: {{ post.author.get_full_name }}
+              </li>
+              <li>
+                Дата публикации: {{ post.created|date:"d E Y" }}
+              </li>
+            </ul>
+            <p>
+              {{ post.text }}
+            </p>
+            {% thumbnail post.image "300" crop="center" upscale=True as im %}
+              <img  class="cared-img my-2"  src="{{ im.url }}" >
+            {% endthumbnail %}
+            <br>
+            <a href="{% url 'posts:post_detail' post.pk %}">подробная информация </a>
+            <br>
+            {% if post.group %}
+              <a href="{% url 'posts:second' post.group.slug %}">все записи группы</a>
+            {% endif %}
+            {% if not forloop.last %}
+              <hr>
+            {% endif %}
+            {% empty %}
+            <p>Постов нет</p>
+          {% endfor %}
         </article>
-        <br>
-        {% if post.group %}
-          <a href="{% url 'posts:second' post.group.slug %}">все записи группы</a>
-        {% endif %}
-        {% if not forloop.last %}
-        <hr>
-        {% endif %}
-        {% empty %}
-          <p>Постов нет</p>
-        {% endfor %}
         {% include 'posts/includes/paginator.html' %}
       </div>
     </div>

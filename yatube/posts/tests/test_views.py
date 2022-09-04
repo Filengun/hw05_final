@@ -62,6 +62,7 @@ class PostsPages(TestCase):
             reverse('posts:post_detail', kwargs={
                 'post_id': 1}): 'posts/post_detail.html',
             reverse('posts:post_create'): 'posts/create_post.html',
+            reverse('posts:follow_index'): 'posts/follow.html'
         }
         for reverse_name, template in templates_pages_names.items():
             with self.subTest(reverse_name=reverse_name):
@@ -236,12 +237,24 @@ class CommentsTest(TestCase):
         )
 
     def setUp(self):
+        self.guest = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(CommentsTest.user)
 
     def test_comment_with_correct_context(self):
         """Проверяем текст и автора при создании коммента."""
         self.authorized_client.get(reverse(
+            'posts:post_detail', kwargs={'post_id': 1}
+        ))
+        com = Comment.objects.get(id=1)
+        text = com.text
+        author = com.author
+        self.assertEqual(str(text), 'текст коммента')
+        self.assertEqual(author, CommentsTest.user)
+    
+    def test_comment_guest(self):
+        """Тоже самое только для гостя."""
+        self.guest.get(reverse(
             'posts:post_detail', kwargs={'post_id': 1}
         ))
         com = Comment.objects.get(id=1)
@@ -259,11 +272,12 @@ class FollowTest(TestCase):
         cls.follower = User.objects.create_user(username='follower')
 
     def setUp(self):
+        self.guest = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(FollowTest.follower)
 
     def test_auth_follow_another_users(self):
-        """проверка подписки."""
+        """проверка подписки авториз."""
         resp_fol = self.authorized_client.get(
             reverse(
                 'posts:profile_follow',
@@ -279,11 +293,7 @@ class FollowTest(TestCase):
         )
 
     def test_unfollowng(self):
-        """Проверка отписки."""
-        Follow.objects.create(
-            user=FollowTest.follower,
-            author=FollowTest.author
-        )
+        """Проверка отписки авториз."""
         self.authorized_client.get(
             reverse(
                 'posts:profile_unfollow', kwargs={'username': 'author'}
@@ -310,3 +320,37 @@ class FollowTest(TestCase):
         response = self.authorized_client.get(reverse('posts:follow_index'))
         second_object = list(response.context['page_obj'])
         self.assertEqual(second_object, [])
+
+    def test_guest_follow_another_users(self):
+        """проверка подписки не авториз."""
+        resp_fol = self.guest.get(
+            reverse(
+                'posts:profile_follow',
+                kwargs={'username': 'author'}))
+        expected = Follow.objects.filter(
+            user=FollowTest.follower).exists()
+        self.assertFalse(expected)
+        self.assertRedirects(
+            resp_fol, '/auth/login/?next=/profile/author/follow/'
+            )
+
+    def test_unfollowng(self):
+        """Проверка отписки для неавторизованного."""
+        resp_fol = self.guest.get(
+            reverse(
+                'posts:profile_unfollow', kwargs={'username': 'author'}
+            )
+        )
+        self.assertRedirects(
+            resp_fol, '/auth/login/?next=/profile/author/unfollow/'
+            )
+    
+    def test_cannot_subscribe_to_himself(self):
+        """Автор не может подписаться сам на себя."""
+        self.authorized_client.get(
+            reverse(
+                'posts:profile_follow',
+                kwargs={'username': 'follower'}))
+        expected = Follow.objects.filter(
+            user=FollowTest.follower).count()
+        self.assertEqual(expected, 0)

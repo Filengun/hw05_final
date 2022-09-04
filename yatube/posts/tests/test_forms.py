@@ -152,3 +152,24 @@ class TestCreateForm(TestCase):
         )
         self.assertEqual(str(Comment.objects.get(id=1)), 'Комментарий')
         self.assertEqual(Comment.objects.count(), len_comment + 1)
+
+    def test_comment_auth(self):
+        """Переадресация неавт пользователя."""
+        post = Post.objects.create(
+            author=TestCreateForm.user,
+            text='test text',
+        )
+        form_data = {
+            'post': post,
+            'author': TestCreateForm.user,
+            'text': 'Комментарий'
+        }
+        response = self.guest_client.post(
+            reverse(
+                'posts:add_comment', kwargs={'post_id': 1}),
+            data=form_data
+        )
+        self.assertRedirects(
+            response,
+            f'/auth/login/?next=/posts/1/comment/'
+        )
