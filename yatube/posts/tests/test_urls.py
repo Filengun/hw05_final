@@ -54,7 +54,7 @@ class StaticURLTests(TestCase):
         """Страницы доступные авторизованному пользователю."""
         for i in StaticURLTests.temp_url:
             with self.subTest(i=i):
-                response = self.guest_client.get(i)
+                response = self.authorized_client.get(i)
                 self.assertEqual(
                     response.status_code,
                     HTTPStatus.OK, "Ок со статусом у авториз"
@@ -92,7 +92,7 @@ class StaticURLTests(TestCase):
     def test_profile_follow_guest(self):
         response = self.guest_client.get('/profile/authh/follow/')
         self.assertEqual(response.status_code, HTTPStatus.FOUND, 'восемь')
-        
+
     def test_comment_auth(self):
         response = self.authorized_client.get('/posts/1/comment/')
         self.assertEqual(response.status_code, HTTPStatus.FOUND, 'девять')
@@ -104,7 +104,7 @@ class StaticURLTests(TestCase):
     def test_unfollow_auth(self):
         response = self.authorized_client.get('/profile/auth/unfollow/')
         self.assertEqual(response.status_code, HTTPStatus.FOUND, 'одиннадцать')
-    
+
     def test_unfollow_guest(self):
         response = self.guest_client.get('/profile/auth/unfollow/')
         self.assertEqual(response.status_code, HTTPStatus.FOUND, 'двенадцать')
