@@ -5,7 +5,7 @@
 ### Используемые библиотеки:
 - [Python 3.7+](https://www.python.org/)
 - [Django 2.2.16](https://www.djangoproject.com)
-- [pytest==6.2.4](https://docs.pytest.org/en/6.2.x/announce/release-6.2.4.html)
+- [pytest 6.2.4](https://docs.pytest.org/en/6.2.x/announce/release-6.2.4.html)
 ------------------------------------------------------------
 - ### Установка:
 #### *Действия для юзеров Windows**
